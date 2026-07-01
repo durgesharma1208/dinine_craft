@@ -184,9 +184,9 @@ export default function HeroBanner() {
                     Explore Collection
                   </Button>
                 </Link>
-                <Link to="/category/wall-hanging">
+                <Link to="/shop">
                   <Button variant="secondary" size="lg">
-                    Our Craft Story
+                    View All Products
                   </Button>
                 </Link>
               </motion.div>

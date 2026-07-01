@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
@@ -17,13 +17,27 @@ export default function ProductDetail() {
   const { slug } = useParams();
   const { getProductBySlug } = useProducts();
   const { addToRecentlyViewed } = useRecentlyViewed();
+  const hasAddedToRecent = useRef(false); // ← Track करने के लिए
 
   const product = getProductBySlug[slug];
 
+  // Recently viewed add करने के लिए
   useEffect(() => {
-    if (product) addToRecentlyViewed(product.id);
+    if (product && !hasAddedToRecent.current) {
+      addToRecentlyViewed(product.id);
+      hasAddedToRecent.current = true;
+    }
+  }, [product?.id, addToRecentlyViewed]);
+
+  // Scroll top के लिए अलग effect
+  useEffect(() => {
     window.scrollTo(0, 0);
-  }, [product, addToRecentlyViewed]);
+  }, [slug]);
+
+  // Slug change होने पर ref reset करें
+  useEffect(() => {
+    hasAddedToRecent.current = false;
+  }, [slug]);
 
   if (!product) {
     return (
@@ -93,7 +107,7 @@ export default function ProductDetail() {
             <p className="text-xs text-gray-500 line-clamp-1">{product.name}</p>
             <p className="text-base font-bold text-primary mt-0.5">{'₹' + product.price.toLocaleString('en-IN')}</p>
           </div>
-          <a href={`https://wa.me/919999999999?text=${encodeURIComponent(`Hello Dinine Craft,%0aI want to order: ${product.name} (₹${product.price})%0aProduct: https://dininecraft.com/product/${product.slug}%0a%0aPlease share more details.`)}`} target="_blank" rel="noopener noreferrer"
+          <a href={`https://wa.me/9664209836?text=${encodeURIComponent(`Hello Dinine Craft,%0aI want to order: ${product.name} (₹${product.price})%0aProduct: https://dininecraft.com/product/${product.slug}%0a%0aPlease share more details.`)}`} target="_blank" rel="noopener noreferrer"
             className="px-6 py-3 bg-emerald-500 text-white rounded-full font-medium text-sm hover:bg-emerald-600 transition-all shadow-[0_4px_14px_rgba(16,185,129,0.25)] flex items-center gap-2"
           >
             Order on WhatsApp

@@ -9,16 +9,12 @@ export default function Navbar({ onSearchOpen }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
+
   const { pathname } = useLocation();
   const { wishlist } = useWishlistContext();
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 50);
-      const total = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress(total > 0 ? window.scrollY / total : 0);
-    };
+    const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -29,8 +25,12 @@ export default function Navbar({ onSearchOpen }) {
   }, [pathname]);
 
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.removeProperty('overflow');
+    }
+    return () => document.body.style.removeProperty('overflow');
   }, [mobileOpen]);
 
   const isActive = useCallback(
@@ -39,24 +39,15 @@ export default function Navbar({ onSearchOpen }) {
   );
 
   const catImages = {
-    keyholder: 'https://images.unsplash.com/photo-1606041008023-472dfb5e5305?w=80&q=70',
-    'wall-hanging': 'https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=80&q=70',
-    'fridge-magnet': 'https://images.unsplash.com/photo-1585849834908-348a1e1c3c21?w=80&q=70',
+    keyholder: 'https://images.unsplash.com/photo-1612152661182-8d6c5e568c94?w=80&q=70',
+    'wall-hanging': 'https://images.unsplash.com/photo-1776335907846-3ed1a76b8529?w=80&q=70',
+    'fridge-magnet': 'https://images.unsplash.com/photo-1759523091199-14f987919622?w=80&q=70',
     'table-stand': 'https://images.unsplash.com/photo-1586105251261-72a756497a11?w=80&q=70',
-    'wall-decor': 'https://images.unsplash.com/photo-1605020420620-20c943e0d4a3?w=80&q=70',
+    'wall-decor': 'https://images.unsplash.com/photo-1758366278217-0d58bf8c7107?w=80&q=70',
   };
 
   return (
     <>
-      {/* Scroll progress bar */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-[2px] z-[101] origin-left"
-        style={{
-          scaleX: scrollProgress,
-          background: 'linear-gradient(90deg, #5f4324, #87663b, #b89a67)',
-        }}
-      />
-
       <motion.header
         initial={false}
         animate={scrolled ? 'scrolled' : 'top'}
@@ -102,13 +93,11 @@ export default function Navbar({ onSearchOpen }) {
 
           {/* Logo */}
           <Link to="/" className="flex items-baseline gap-1.5 group shrink-0">
-            <motion.span
-              whileHover={{ letterSpacing: '-0.01em' }}
-              transition={{ duration: 0.3 }}
+            <span
               className="text-[1.65rem] font-display font-semibold text-[#87663b] tracking-[-0.02em] leading-none"
             >
               Dinine
-            </motion.span>
+            </span>
             <span className="text-[1.65rem] font-display font-light text-[#28221a]/75 tracking-[-0.02em] leading-none">
               Craft
             </span>

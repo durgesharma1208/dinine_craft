@@ -27,6 +27,8 @@ export function generateProductJsonLd(product) {
   };
 }
 
+import { WHATSAPP_NUMBER } from './constants';
+
 export function generateOrganizationJsonLd() {
   return {
     '@context': 'https://schema.org',
@@ -37,7 +39,7 @@ export function generateOrganizationJsonLd() {
     description: 'Handcrafted Wooden Decor That Makes Every Space Beautiful',
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '+91-9999999999',
+      telephone: `+91-${WHATSAPP_NUMBER}`,
       contactType: 'customer service',
       availableLanguage: ['English', 'Hindi'],
     },
