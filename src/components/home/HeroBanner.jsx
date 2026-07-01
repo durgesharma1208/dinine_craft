@@ -32,8 +32,8 @@ export default function HeroBanner() {
   return (
     <section
       ref={ref}
-      className="relative min-h-screen flex items-center overflow-hidden"
-      style={{ paddingTop: 'calc(36px + 80px)' }}
+      className="relative min-h-[85vh] flex items-center overflow-hidden"
+      style={{ paddingTop: 'calc(3px + 6px)' }}
     >
       {/* Rich layered background */}
       <div
@@ -93,14 +93,7 @@ export default function HeroBanner() {
         />
 
         {/* Corner decorative element */}
-        <div
-          className="absolute top-[8%] left-[6%] w-20 h-20 opacity-10"
-          style={{
-            border: '1px solid #87663b',
-            borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%',
-            transform: 'rotate(-15deg)',
-          }}
-        />
+    
       </div>
 
       <motion.div style={{ opacity }} className="relative w-full">
@@ -114,18 +107,8 @@ export default function HeroBanner() {
               animate="visible"
               className="relative z-10"
             >
-              {/* Eyebrow */}
-              <motion.div variants={itemVariants} className="mb-7">
-                <div className="inline-flex items-center gap-3 px-4 py-2.5 rounded-full bg-white/55 border border-[#87663b]/14 luxury-ring">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-[#87663b] opacity-50" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#87663b]" />
-                  </span>
-                  <span className="text-[10.5px] font-bold uppercase tracking-[0.18em] text-[#87663b]">
-                    Premium Handcrafted Wooden Decor
-                  </span>
-                </div>
-              </motion.div>
+              {/* Logo */}
+            
 
               {/* Main headline */}
               <motion.div variants={itemVariants}>

@@ -45,8 +45,6 @@
 
   html {
     scroll-behavior: smooth;
-    overflow-x: hidden;
-    overflow-y: auto;
     font-size: 16px;
   }
 
@@ -62,6 +60,8 @@
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.7;
     letter-spacing: 0.01em;
+    touch-action: pan-y pinch-zoom;
+    overflow-x: hidden;
   }
 
   #root {

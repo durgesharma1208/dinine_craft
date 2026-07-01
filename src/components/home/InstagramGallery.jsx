@@ -3,13 +3,13 @@ import { Camera, ExternalLink } from 'lucide-react';
 import { INSTAGRAM_URL } from '../../utils/constants';
 
 const images = [
-  { src: 'https://images.unsplash.com/photo-1606041008023-472dfb5e5305?w=500&q=80', span: 'row-span-2' },
-  { src: 'https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=500&q=80', span: '' },
-  { src: 'https://images.unsplash.com/photo-1585849834908-348a1e1c3c21?w=500&q=80', span: '' },
+  { src: 'https://images.unsplash.com/photo-1773660111368-1f87eb7cd483?w=500&q=80', span: 'row-span-2' },
+  { src: 'https://images.unsplash.com/photo-1778034758279-58be4e75f628?w=500&q=80', span: '' },
+  { src: 'https://images.unsplash.com/photo-1775595224305-cf7d4487123d?w=500&q=80', span: '' },
+  { src: 'https://images.unsplash.com/photo-1775029918420-1f89b9bcfc0e?w=500&q=80', span: '' },
+  { src: 'https://images.unsplash.com/photo-1770731959852-b3b309d9104e?w=500&q=80', span: '' },
   { src: 'https://images.unsplash.com/photo-1586105251261-72a756497a11?w=500&q=80', span: '' },
-  { src: 'https://images.unsplash.com/photo-1605020420620-20c943e0d4a3?w=500&q=80', span: '' },
-  { src: 'https://images.unsplash.com/photo-1518607689150-412def5d769f?w=500&q=80', span: '' },
-  { src: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=500&q=80', span: '' },
+  { src: 'https://images.unsplash.com/photo-1758366278217-0d58bf8c7107?w=500&q=80', span: '' },
 ];
 
 export default function InstagramGallery() {
@@ -61,7 +61,7 @@ export default function InstagramGallery() {
               <img
                 src={img.src}
                 alt={`Dinine Craft handcrafted wood decor ${index + 1}`}
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-107 transition-transform duration-700 ease-out"
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 loading="lazy"
               />
               {/* Overlay */}

@@ -1,4 +1,4 @@
-import { useState, memo, useRef } from "react";
+import { useState, memo } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Heart, Eye, Star } from "lucide-react";
@@ -11,25 +11,13 @@ const ProductCard = memo(function ProductCard({
   onQuickView,
   index = 0,
 }) {
-  const [imgHovered, setImgHovered] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
-  const cardRef = useRef(null);
   const { isInWishlist, toggleWishlist } = useWishlistContext();
   const wishlisted = isInWishlist(product.id);
   const stockInfo = getStockStatus(product.stock, product.availability);
 
-  const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    cardRef.current.style.setProperty("--mouse-x", x);
-    cardRef.current.style.setProperty("--mouse-y", y);
-  };
-
   const hasDiscount = product.originalPrice > product.price;
-  const altImage = product.images?.[1] || product.thumbnail;
 
   return (
     <motion.div
@@ -45,48 +33,22 @@ const ProductCard = memo(function ProductCard({
       className="group relative"
     >
       <div
-        ref={cardRef}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={(e) => {
-          setImgHovered(true);
-          e.currentTarget.style.boxShadow =
-            "0 28px 65px rgba(54,35,18,0.16), 0 10px 20px rgba(54,35,18,0.1)";
-          e.currentTarget.style.transform =
-            "perspective(880px) rotateX(calc(var(--mouse-y) * -4deg)) rotateY(calc(var(--mouse-x) * 4deg)) translateY(-7px)";
-        }}
-        onMouseLeave={(e) => {
-          setImgHovered(false);
-          e.currentTarget.style.boxShadow =
-            "0 10px 26px rgba(45,30,15,0.08), 0 1px 4px rgba(45,30,15,0.06)";
-          e.currentTarget.style.transform =
-            "perspective(880px) rotateX(0deg) rotateY(0deg) translateY(0px)";
-        }}
-        className="relative bg-[#fffdf9] rounded-[1.35rem] overflow-hidden transition-all duration-500 border border-[#8b6d45]/10"
-        style={{
-          boxShadow:
-            "0 10px 26px rgba(45,30,15,0.08), 0 1px 4px rgba(45,30,15,0.06)",
-          transform: "perspective(880px)",
-          transition: "box-shadow 0.5s ease, transform 0.5s ease",
-        }}
+        className="relative bg-[#fffdf9] rounded-[1.35rem] overflow-hidden border border-[#8b6d45]/10 shadow-[0_10px_26px_rgba(45,30,15,0.08),0_1px_4px_rgba(45,30,15,0.06)] transition-all duration-500 hover:shadow-[0_28px_65px_rgba(54,35,18,0.16),0_10px_20px_rgba(54,35,18,0.1)] hover:-translate-y-1"
       >
         <div className="relative overflow-hidden aspect-square bg-[#f4e9dc]/55">
           <Link to={`/product/${product.slug}`}>
-            <motion.img
+            <img
               src={
                 imgError
                   ? "https://images.unsplash.com/photo-1612152661182-8d6c5e568c94?w=400&q=80"
-                  : imgHovered
-                    ? altImage
-                    : product.thumbnail
+                  : product.thumbnail
               }
               alt={product.name}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               style={{ opacity: imgLoaded ? 1 : 0 }}
               onLoad={() => setImgLoaded(true)}
               loading="lazy"
               onError={() => setImgError(true)}
-              animate={{ scale: imgHovered ? 1.08 : 1 }}
-              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
             />
             {!imgLoaded && (
               <div className="absolute inset-0 bg-cream animate-shimmer" />
