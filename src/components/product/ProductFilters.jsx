@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, RotateCcw } from "lucide-react";
-import { CATEGORIES } from "../../utils/constants";
+import { useCategories } from "../../hooks/useCategories";
 
 export default function ProductFilters({
   filters,
@@ -10,6 +10,7 @@ export default function ProductFilters({
   isOpen,
   onClose,
 }) {
+  const { categories } = useCategories();
   const priceRanges = [
     {
       label: "All Prices",
@@ -72,7 +73,7 @@ export default function ProductFilters({
           >
             All Categories
           </button>
-          {CATEGORIES.map((cat) => (
+          {categories.map((cat) => (
             <button
               key={cat.slug}
               onClick={() => updateFilter("category", cat.slug)}

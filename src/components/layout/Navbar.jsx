@@ -2,10 +2,16 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Heart, Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
-import { NAV_LINKS, CATEGORIES } from '../../utils/constants';
 import { useWishlistContext } from '../../contexts/WishlistContext';
+import { useCategories } from '../../hooks/useCategories';
+
+const staticLinks = [
+  { name: 'Home', path: '/' },
+  { name: 'Shop All', path: '/shop' },
+];
 
 export default function Navbar({ onSearchOpen }) {
+  const { categories } = useCategories();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -37,14 +43,6 @@ export default function Navbar({ onSearchOpen }) {
     (path) => (path === '/' ? pathname === '/' : pathname.startsWith(path)),
     [pathname],
   );
-
-  const catImages = {
-    keyholder: 'https://images.unsplash.com/photo-1612152661182-8d6c5e568c94?w=80&q=70',
-    'wall-hanging': 'https://images.unsplash.com/photo-1776335907846-3ed1a76b8529?w=80&q=70',
-    'fridge-magnet': 'https://images.unsplash.com/photo-1759523091199-14f987919622?w=80&q=70',
-    'table-stand': 'https://images.unsplash.com/photo-1586105251261-72a756497a11?w=80&q=70',
-    'wall-decor': 'https://images.unsplash.com/photo-1758366278217-0d58bf8c7107?w=80&q=70',
-  };
 
   return (
     <>
@@ -106,7 +104,7 @@ export default function Navbar({ onSearchOpen }) {
 
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-0.5 bg-white/50 border border-white/65 rounded-full px-2 py-1.5 shadow-[0_6px_20px_rgba(40,30,15,0.07)]">
-            {NAV_LINKS.slice(0, 2).map((link) => (
+            {staticLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
@@ -153,7 +151,7 @@ export default function Navbar({ onSearchOpen }) {
                   >
                     <div className="px-3 pt-3 pb-2">
                       <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-[#87663b]/55 px-2 mb-2">Collections</p>
-                      {CATEGORIES.map((cat) => (
+                      {categories.map((cat) => (
                         <Link
                           key={cat.slug}
                           to={`/category/${cat.slug}`}
@@ -161,7 +159,7 @@ export default function Navbar({ onSearchOpen }) {
                         >
                           <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 border border-[#c9a177]/20">
                             <img
-                              src={catImages[cat.slug]}
+                              src={cat.image || ''}
                               alt={cat.name}
                               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                             />
@@ -187,17 +185,6 @@ export default function Navbar({ onSearchOpen }) {
               </AnimatePresence>
             </div>
 
-            {NAV_LINKS.slice(2, 3).map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`relative px-4 py-2 text-[11.5px] uppercase tracking-[0.13em] font-semibold rounded-full transition-colors duration-200 ${
-                  isActive(link.path) ? 'text-[#87663b]' : 'text-[#28221a]/60 hover:text-[#28221a]'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
           </nav>
 
           {/* Action icons */}
@@ -245,7 +232,7 @@ export default function Navbar({ onSearchOpen }) {
               className="lg:hidden overflow-hidden bg-[#fffdf9]/97 backdrop-blur-2xl border-t border-[#c9a177]/12 shadow-[0_24px_60px_rgba(40,25,10,0.18)]"
             >
               <div className="max-w-[1320px] mx-auto px-5 py-5 space-y-1 max-h-[calc(100vh-10rem)] overflow-y-auto">
-                {NAV_LINKS.map((link, i) => (
+                {staticLinks.map((link, i) => (
                   <motion.div
                     key={link.path}
                     initial={{ opacity: 0, x: -16 }}
@@ -273,19 +260,19 @@ export default function Navbar({ onSearchOpen }) {
                     Categories
                   </p>
                   <div className="grid grid-cols-2 gap-2">
-                    {CATEGORIES.map((cat, i) => (
+                    {categories.map((cat, i) => (
                       <motion.div
                         key={cat.slug}
                         initial={{ opacity: 0, scale: 0.94 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.3, delay: (NAV_LINKS.length + i) * 0.04 }}
+                        transition={{ duration: 0.3, delay: (staticLinks.length + i) * 0.04 }}
                       >
                         <Link
                           to={`/category/${cat.slug}`}
                           className="flex items-center gap-2.5 p-3 rounded-2xl hover:bg-[#f5e8d6]/70 transition-all group"
                         >
                           <div className="w-9 h-9 rounded-xl overflow-hidden border border-[#c9a177]/20 flex-shrink-0">
-                            <img src={catImages[cat.slug]} alt={cat.name} className="w-full h-full object-cover" />
+                            <img src={cat.image || ''} alt={cat.name} className="w-full h-full object-cover" />
                           </div>
                           <span className="text-sm font-medium text-[#28221a]/70 group-hover:text-[#28221a]">
                             {cat.name}s

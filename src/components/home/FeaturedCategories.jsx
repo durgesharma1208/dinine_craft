@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import { CATEGORIES } from '../../utils/constants';
+import { useCategories } from '../../hooks/useCategories';
 
 // Asymmetric heights for masonry feel
 const cardHeights = ['h-[340px]', 'h-[280px]', 'h-[320px]', 'h-[300px]', 'h-[360px]'];
 
 export default function FeaturedCategories() {
+  const { categories } = useCategories();
   return (
     <section className="py-28 relative overflow-hidden">
       {/* Background texture */}
@@ -42,7 +43,7 @@ export default function FeaturedCategories() {
 
         {/* Category grid — mixed heights */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
-          {CATEGORIES.map((cat, index) => (
+          {categories.map((cat, index) => (
             <motion.div
               key={cat.slug}
               initial={{ opacity: 0, y: 36, scale: 0.95 }}

@@ -1,18 +1,19 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Camera, ExternalLink } from 'lucide-react';
 import { INSTAGRAM_URL } from '../../utils/constants';
-
-const images = [
-  { src: 'https://images.unsplash.com/photo-1773660111368-1f87eb7cd483?w=500&q=80', span: 'row-span-2' },
-  { src: 'https://images.unsplash.com/photo-1778034758279-58be4e75f628?w=500&q=80', span: '' },
-  { src: 'https://images.unsplash.com/photo-1775595224305-cf7d4487123d?w=500&q=80', span: '' },
-  { src: 'https://images.unsplash.com/photo-1775029918420-1f89b9bcfc0e?w=500&q=80', span: '' },
-  { src: 'https://images.unsplash.com/photo-1770731959852-b3b309d9104e?w=500&q=80', span: '' },
-  { src: 'https://images.unsplash.com/photo-1586105251261-72a756497a11?w=500&q=80', span: '' },
-  { src: 'https://images.unsplash.com/photo-1758366278217-0d58bf8c7107?w=500&q=80', span: '' },
-];
+import { fetchInstagramGallery } from '../../services/contentService';
 
 export default function InstagramGallery() {
+  const [gallery, setGallery] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    fetchInstagramGallery()
+      .then(data => { if (mounted) setGallery(data || []); })
+      .catch(() => {});
+    return () => { mounted = false; };
+  }, []);
   return (
     <section className="py-24 relative overflow-hidden">
       {/* Soft background */}
@@ -45,21 +46,21 @@ export default function InstagramGallery() {
 
         {/* Masonry-style grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 auto-rows-[160px] md:auto-rows-[180px]">
-          {images.map((img, index) => (
+          {gallery.map((item, index) => (
             <motion.a
-              key={index}
-              href={INSTAGRAM_URL}
+              key={item.id || index}
+              href={item.url || INSTAGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-              className={`group relative overflow-hidden rounded-2xl grain-border ${img.span}`}
+              className={`group relative overflow-hidden rounded-2xl grain-border ${item.span || ''}`}
               style={{ boxShadow: '0 8px 30px rgba(40,28,15,0.08)' }}
             >
               <img
-                src={img.src}
+                src={item.image}
                 alt={`Dinine Craft handcrafted wood decor ${index + 1}`}
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 loading="lazy"

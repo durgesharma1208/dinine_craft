@@ -1,10 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
-import { FAQS } from '../../utils/constants';
+import { fetchFAQ } from '../../services/contentService';
 
 export default function FAQ() {
+  const [faqItems, setFaqItems] = useState([]);
   const [openIndex, setOpenIndex] = useState(0);
+
+  useEffect(() => {
+    let mounted = true;
+    fetchFAQ()
+      .then(data => { if (mounted) setFaqItems(data || []); })
+      .catch(() => {});
+    return () => { mounted = false; };
+  }, []);
 
   return (
     <section className="py-24 bg-cream/30">
@@ -22,7 +31,7 @@ export default function FAQ() {
         </motion.div>
 
         <div className="space-y-2.5">
-          {FAQS.map((faq, index) => (
+          {faqItems.map((faq, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 10 }}

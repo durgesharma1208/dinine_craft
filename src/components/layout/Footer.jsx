@@ -1,14 +1,8 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Heart, ArrowUpRight, Globe } from 'lucide-react';
-import {
-  CATEGORIES,
-  WHATSAPP_NUMBER,
-  EMAIL,
-  INSTAGRAM_URL,
-  FACEBOOK_URL,
-  PINTEREST_URL,
-} from '../../utils/constants';
+import { WHATSAPP_NUMBER, EMAIL, INSTAGRAM_URL, FACEBOOK_URL, PINTEREST_URL } from '../../utils/constants';
+import { useCategories } from '../../hooks/useCategories';
 
 const quickLinks = [
   { name: 'Home', path: '/' },
@@ -46,6 +40,7 @@ const socials = [
 ];
 
 export default function Footer() {
+  const { categories } = useCategories();
   return (
     <footer className="bg-[#190f07] text-white/75 relative overflow-hidden">
       {/* Decorative orbs */}
@@ -173,7 +168,7 @@ export default function Footer() {
               Collections
             </h4>
             <ul className="space-y-3">
-              {CATEGORIES.map((cat) => (
+              {categories.map((cat) => (
                 <li key={cat.slug}>
                   <Link
                     to={`/category/${cat.slug}`}

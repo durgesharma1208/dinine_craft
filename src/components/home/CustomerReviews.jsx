@@ -1,7 +1,7 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
-import { REVIEWS } from '../../utils/constants';
+import { fetchTestimonials } from '../../services/contentService';
 
 // Generate initials avatar colors
 const avatarColors = [
@@ -13,7 +13,16 @@ function getInitials(name) {
 }
 
 export default function CustomerReviews() {
+  const [testimonials, setTestimonials] = useState([]);
   const scrollRef = useRef(null);
+
+  useEffect(() => {
+    let mounted = true;
+    fetchTestimonials()
+      .then(data => { if (mounted) setTestimonials(data || []); })
+      .catch(() => {});
+    return () => { mounted = false; };
+  }, []);
 
   const scroll = (dir) => {
     if (scrollRef.current) {
@@ -69,7 +78,7 @@ export default function CustomerReviews() {
           ref={scrollRef}
           className="flex gap-5 overflow-x-auto scrollbar-hide pb-5 -mx-5 px-5 snap-x snap-mandatory"
         >
-          {REVIEWS.map((review, index) => (
+          {testimonials.map((review, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, x: 30 }}

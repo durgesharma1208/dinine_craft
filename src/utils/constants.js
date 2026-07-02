@@ -1,21 +1,3 @@
-export const NAV_LINKS = [
-  { name: 'Home', path: '/' },
-  { name: 'Shop All', path: '/shop' },
-  { name: 'Keyholders', path: '/category/keyholder' },
-  { name: 'Wall Hangings', path: '/category/wall-hanging' },
-  { name: 'Fridge Magnets', path: '/category/fridge-magnet' },
-  { name: 'Table Stands', path: '/category/table-stand' },
-  { name: 'Wall Decor', path: '/category/wall-decor' },
-];
-
-export const CATEGORIES = [
-  { name: 'Keyholder', slug: 'keyholder', image: 'https://images.unsplash.com/photo-1612152661182-8d6c5e568c94?w=400&q=80', description: 'Handcrafted wooden keyholders with premium brass hooks' },
-  { name: 'Wall Hanging', slug: 'wall-hanging', image: 'https://images.unsplash.com/photo-1776335907846-3ed1a76b8529?w=400&q=80', description: 'Beautiful wall art and hanging decor pieces' },
-  { name: 'Fridge Magnet', slug: 'fridge-magnet', image: 'https://images.unsplash.com/photo-1759523091199-14f987919622?w=400&q=80', description: 'Charming wooden magnets for your kitchen' },
-  { name: 'Table Stand', slug: 'table-stand', image: 'https://images.unsplash.com/photo-1586105251261-72a756497a11?w=400&q=80', description: 'Functional and decorative table accessories' },
-  { name: 'Wall Decor', slug: 'wall-decor', image: 'https://images.unsplash.com/photo-1758366278217-0d58bf8c7107?w=400&q=80', description: 'Statement pieces that transform your walls' },
-];
-
 export const FEATURES = [
   { icon: 'Leaf', title: '100% Handmade', description: 'Each piece is meticulously crafted by skilled artisans using traditional techniques passed down through generations.' },
   { icon: 'Truck', title: 'Free Shipping', description: 'Free shipping on all orders above ₹999. We deliver across India with careful packaging and fast delivery.' },

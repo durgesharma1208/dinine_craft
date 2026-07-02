@@ -3,12 +3,21 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, TrendingUp } from 'lucide-react';
 import Fuse from 'fuse.js';
-import productsData from '../../data/products.json';
+import { fetchAllProducts } from '../../services/productService';
 import { formatPrice } from '../../utils/helpers';
 
 export default function SearchModal({ isOpen, onClose }) {
   const [query, setQuery] = useState('');
+  const [allProducts, setAllProducts] = useState([]);
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    let mounted = true;
+    fetchAllProducts()
+      .then(data => { if (mounted) setAllProducts(data || []); })
+      .catch(() => {});
+    return () => { mounted = false; };
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -24,7 +33,7 @@ export default function SearchModal({ isOpen, onClose }) {
     return () => document.removeEventListener('keydown', handleEsc);
   }, [onClose]);
 
-  const fuse = useMemo(() => new Fuse(productsData, {
+  const fuse = useMemo(() => new Fuse(allProducts, {
     keys: [
       { name: 'name', weight: 2 },
       { name: 'category', weight: 1.5 },
@@ -34,12 +43,12 @@ export default function SearchModal({ isOpen, onClose }) {
     ],
     threshold: 0.35,
     includeScore: true,
-  }), []);
+  }), [allProducts]);
 
   const results = useMemo(() => {
-    if (!query.trim()) return productsData.slice(0, 6);
+    if (!query.trim()) return allProducts.slice(0, 6);
     return fuse.search(query).map(r => r.item).slice(0, 8);
-  }, [query, fuse]);
+  }, [query, fuse, allProducts]);
 
   const highlightMatch = (text) => {
     if (!query.trim()) return text;
