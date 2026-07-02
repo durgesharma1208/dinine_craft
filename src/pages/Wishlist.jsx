@@ -6,6 +6,7 @@ import { useWishlistContext } from '../contexts/WishlistContext';
 import { useProducts } from '../hooks/useProducts';
 import ProductCard from '../components/product/ProductCard';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
+import { SITE_URL } from '../utils/siteUrl';
 
 export default function Wishlist() {
   const { wishlist, clearWishlist } = useWishlistContext();
@@ -17,7 +18,7 @@ export default function Wishlist() {
       <Helmet>
         <title>My Wishlist — Dinine Craft</title>
         <meta name="description" content="View your saved items at Dinine Craft" />
-        <link rel="canonical" href="https://dininecraft.com/wishlist" />
+        <link rel="canonical" href={`${SITE_URL}/wishlist`} />
       </Helmet>
 
       <div className="pt-[72px]">

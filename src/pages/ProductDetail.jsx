@@ -6,6 +6,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useProducts } from '../hooks/useProducts';
 import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
 import { generateProductJsonLd, generateBreadcrumbJsonLd } from '../utils/seo';
+import { SITE_URL } from '../utils/siteUrl';
 import ProductGallery from '../components/product/ProductGallery';
 import ProductInfo from '../components/product/ProductInfo';
 import RelatedProducts from '../components/product/RelatedProducts';
@@ -70,11 +71,11 @@ export default function ProductDetail() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`${product.name} — Dinine Craft`} />
         <meta name="twitter:image" content={product.images?.[0] || product.thumbnail} />
-        <link rel="canonical" href={`https://dininecraft.com/product/${product.slug}`} />
+        <link rel="canonical" href={`${SITE_URL}/product/${product.slug}`} />
         <script type="application/ld+json">{JSON.stringify(generateProductJsonLd(product))}</script>
         <script type="application/ld+json">{JSON.stringify(generateBreadcrumbJsonLd(breadcrumbItems.map((item) => ({
           name: item.label,
-          url: item.to ? `https://dininecraft.com${item.to}` : `https://dininecraft.com/product/${product.slug}`,
+          url: item.to ? `${SITE_URL}${item.to}` : `${SITE_URL}/product/${product.slug}`,
         }))))}</script>
       </Helmet>
 
@@ -107,7 +108,7 @@ export default function ProductDetail() {
             <p className="text-xs text-gray-500 line-clamp-1">{product.name}</p>
             <p className="text-base font-bold text-primary mt-0.5">{'₹' + product.price.toLocaleString('en-IN')}</p>
           </div>
-          <a href={`https://wa.me/9664209836?text=${encodeURIComponent(`Hello Dinine Craft,%0aI want to order: ${product.name} (₹${product.price})%0aProduct: https://dininecraft.com/product/${product.slug}%0a%0aPlease share more details.`)}`} target="_blank" rel="noopener noreferrer"
+          <a href={`https://wa.me/9664209836?text=${encodeURIComponent(`Hello Dinine Craft,%0aI want to order: ${product.name} (₹${product.price})%0aProduct: ${SITE_URL}/product/${product.slug}%0a%0aPlease share more details.`)}`} target="_blank" rel="noopener noreferrer"
             className="px-6 py-3 bg-emerald-500 text-white rounded-full font-medium text-sm hover:bg-emerald-600 transition-all shadow-[0_4px_14px_rgba(16,185,129,0.25)] flex items-center gap-2"
           >
             Order on WhatsApp

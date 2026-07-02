@@ -7,14 +7,16 @@ import { useFilterSort } from "../hooks/useFilterSort";
 import ProductGrid from "../components/product/ProductGrid";
 import ProductSort from "../components/product/ProductSort";
 import Breadcrumbs from "../components/ui/Breadcrumbs";
-import { CATEGORIES } from "../utils/constants";
+import { useCategories } from "../hooks/useCategories";
+import { SITE_URL } from "../utils/siteUrl";
 
 export default function CategoryPage() {
   const { categorySlug } = useParams();
   const { getProductsByCategory } = useProducts();
+  const { categories } = useCategories();
 
   const categoryProducts = getProductsByCategory[categorySlug] || [];
-  const categoryInfo = CATEGORIES.find((c) => c.slug === categorySlug);
+  const categoryInfo = categories.find((c) => c.slug === categorySlug);
   const categoryName =
     categoryInfo?.name ||
     categorySlug.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
@@ -35,7 +37,7 @@ export default function CategoryPage() {
         />
         <link
           rel="canonical"
-          href={`https://dininecraft.com/category/${categorySlug}`}
+          href={`${SITE_URL}/category/${categorySlug}`}
         />
       </Helmet>
 

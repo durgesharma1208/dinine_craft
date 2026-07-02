@@ -12,6 +12,7 @@ import Newsletter from '../components/home/Newsletter';
 import ContactCTA from '../components/home/ContactCTA';
 import ProductSection from '../components/home/ProductSection';
 import { generateOrganizationJsonLd, generateWebsiteJsonLd } from '../utils/seo';
+import { SITE_URL } from '../utils/siteUrl';
 
 export default function Home() {
   return (
@@ -22,11 +23,11 @@ export default function Home() {
         <meta property="og:title" content="Dinine Craft — Handcrafted Wooden Decor" />
         <meta property="og:description" content="Handcrafted Wooden Decor That Makes Every Space Beautiful" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://dininecraft.com" />
+        <meta property="og:url" content={SITE_URL} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Dinine Craft — Handcrafted Wooden Decor" />
         <meta name="twitter:description" content="Handcrafted Wooden Decor That Makes Every Space Beautiful" />
-        <link rel="canonical" href="https://dininecraft.com" />
+        <link rel="canonical" href={SITE_URL} />
         <script type="application/ld+json">{JSON.stringify(generateOrganizationJsonLd())}</script>
         <script type="application/ld+json">{JSON.stringify(generateWebsiteJsonLd())}</script>
       </Helmet>

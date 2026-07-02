@@ -1,3 +1,5 @@
+import { SITE_URL } from './siteUrl';
+
 export function generateProductJsonLd(product) {
   return {
     '@context': 'https://schema.org',
@@ -12,7 +14,7 @@ export function generateProductJsonLd(product) {
     },
     offers: {
       '@type': 'Offer',
-      url: `https://dininecraft.com/product/${product.slug}`,
+      url: `${SITE_URL}/product/${product.slug}`,
       priceCurrency: 'INR',
       price: product.price,
       priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
@@ -34,8 +36,7 @@ export function generateOrganizationJsonLd() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Dinine Craft',
-    url: 'https://dininecraft.com',
-    logo: 'https://images.unsplash.com/photo-1612152661182-8d6c5e568c94?w=200&q=80',
+    url: SITE_URL,
     description: 'Handcrafted Wooden Decor That Makes Every Space Beautiful',
     contactPoint: {
       '@type': 'ContactPoint',
@@ -56,10 +57,10 @@ export function generateWebsiteJsonLd() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Dinine Craft',
-    url: 'https://dininecraft.com',
+    url: SITE_URL,
     potentialAction: {
       '@type': 'SearchAction',
-      target: 'https://dininecraft.com/shop?search={search_term_string}',
+      target: `${SITE_URL}/shop?search={search_term_string}`,
       'query-input': 'required name=search_term_string',
     },
   };

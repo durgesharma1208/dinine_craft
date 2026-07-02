@@ -8,6 +8,7 @@ import ProductFilters from "../components/product/ProductFilters";
 import ProductSort from "../components/product/ProductSort";
 import QuickView from "../components/product/QuickView";
 import Breadcrumbs from "../components/ui/Breadcrumbs";
+import { SITE_URL } from "../utils/siteUrl";
 
 export default function Shop() {
   const { allProducts } = useProducts();
@@ -33,7 +34,7 @@ export default function Shop() {
           name="description"
           content="Browse our complete collection of handcrafted wooden decor. Shop keyholders, wall hangings, fridge magnets, table stands, and more."
         />
-        <link rel="canonical" href="https://dininecraft.com/shop" />
+        <link rel="canonical" href={`${SITE_URL}/shop`} />
       </Helmet>
 
       <div className="pt-18">
