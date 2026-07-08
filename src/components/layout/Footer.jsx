@@ -7,6 +7,7 @@ import { useCategories } from '../../hooks/useCategories';
 const quickLinks = [
   { name: 'Home', path: '/' },
   { name: 'Shop All', path: '/shop' },
+  { name: 'Catalogs', path: '/shop#catalogs' },
   { name: 'Wishlist', path: '/wishlist' },
 ];
 

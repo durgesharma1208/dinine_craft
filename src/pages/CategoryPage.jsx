@@ -1,7 +1,8 @@
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { useProducts } from "../hooks/useProducts";
 import { useFilterSort } from "../hooks/useFilterSort";
 import ProductGrid from "../components/product/ProductGrid";
@@ -9,20 +10,45 @@ import ProductSort from "../components/product/ProductSort";
 import Breadcrumbs from "../components/ui/Breadcrumbs";
 import { useCategories } from "../hooks/useCategories";
 import { SITE_URL } from "../utils/siteUrl";
+import CatalogSection from "../components/catalog/CatalogSection";
+import CatalogSidebarCard from "../components/catalog/CatalogSidebarCard";
+import { fetchCatalogsByCategory } from "../services/catalogService";
 
 export default function CategoryPage() {
   const { categorySlug } = useParams();
-  const { getProductsByCategory } = useProducts();
-  const { categories } = useCategories();
+  const { getProductsByCategory, loading: productsLoading } = useProducts();
+  const { categories, loading: categoriesLoading } = useCategories();
+  const [catalogs, setCatalogs] = useState([]);
+  const [catalogsLoading, setCatalogsLoading] = useState(true);
 
   const categoryProducts = getProductsByCategory[categorySlug] || [];
   const categoryInfo = categories.find((c) => c.slug === categorySlug);
+  const isLoading = productsLoading || categoriesLoading;
   const categoryName =
     categoryInfo?.name ||
     categorySlug.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
   const { sortBy, setSortBy, filteredAndSorted } =
     useFilterSort(categoryProducts);
+
+  useEffect(() => {
+    if (!categoryInfo?.id) return;
+    let mounted = true;
+    setCatalogsLoading(true);
+    fetchCatalogsByCategory(categoryInfo.id)
+      .then(data => { if (mounted) setCatalogs(data || []); })
+      .catch(() => { if (mounted) setCatalogs([]); })
+      .finally(() => { if (mounted) setCatalogsLoading(false); });
+    return () => { mounted = false; };
+  }, [categoryInfo?.id]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <Loader2 size={24} className="animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -54,22 +80,32 @@ export default function CategoryPage() {
 
       <section className="pb-20 pt-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-8 premium-shell rounded-[1.8rem] p-6 md:p-8"
-          >
-            <p className="section-eyebrow mb-2">Category</p>
-            <h1 className="text-3xl md:text-5xl font-display text-charcoal tracking-tight leading-[0.98]">
-              {categoryName}s
-            </h1>
-            {categoryInfo?.description && (
-              <p className="text-[#5a4f43] text-sm md:text-base mt-3 max-w-2xl">
-                {categoryInfo.description}
-              </p>
+          <div className="flex flex-col lg:flex-row gap-6 mb-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="flex-1 premium-shell rounded-[1.8rem] p-6 md:p-8"
+            >
+              <p className="section-eyebrow mb-2">Category</p>
+              <h1 className="text-3xl md:text-5xl font-display text-charcoal tracking-tight leading-[0.98]">
+                {categoryName}s
+              </h1>
+              {categoryInfo?.description && (
+                <p className="text-[#5a4f43] text-sm md:text-base mt-3 max-w-2xl">
+                  {categoryInfo.description}
+                </p>
+              )}
+            </motion.div>
+
+            {categoryInfo && (
+              <div className="lg:w-72 shrink-0">
+                <div className="lg:sticky lg:top-24">
+                  <CatalogSidebarCard catalogs={catalogs} loading={catalogsLoading} />
+                </div>
+              </div>
             )}
-          </motion.div>
+          </div>
 
           <ProductSort
             sortBy={sortBy}
@@ -109,6 +145,10 @@ export default function CategoryPage() {
           )}
         </div>
       </section>
+
+      {categoryInfo && catalogs.length > 0 && (
+        <CatalogSection categoryId={categoryInfo.id} categoryName={categoryInfo.name} categorySlug={categoryInfo.slug} />
+      )}
     </>
   );
 }

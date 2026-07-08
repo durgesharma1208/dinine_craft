@@ -50,3 +50,14 @@ export {
   listImages,
   getAllImages,
 } from './mediaService';
+
+export {
+  fetchCatalogs,
+  fetchCatalogsByCategory,
+  fetchCatalogById,
+  createCatalog,
+  updateCatalog,
+  deleteCatalog,
+  uploadPDF,
+  uploadCover,
+} from './catalogService';

@@ -30,9 +30,7 @@ export function useFilterSort(products) {
     }
 
     if (filters.category) {
-      result = result.filter(p =>
-        p.category.toLowerCase().replace(/\s+/g, '-') === filters.category
-      );
+      result = result.filter(p => p.category_slug === filters.category);
     }
 
     if (filters.minPrice > 0) {

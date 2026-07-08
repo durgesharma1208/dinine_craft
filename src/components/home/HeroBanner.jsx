@@ -1,8 +1,9 @@
-import { useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Mouse } from 'lucide-react';
 import Button from '../ui/Button';
+import { getHomepageSections } from '../../services/adminService';
 
 const containerVariants = {
   hidden: {},
@@ -20,7 +21,30 @@ const itemVariants = {
 };
 
 export default function HeroBanner() {
+  const [heroData, setHeroData] = useState(null);
   const ref = useRef(null);
+
+  useEffect(() => {
+    let mounted = true;
+    getHomepageSections()
+      .then(sections => {
+        if (!mounted) return;
+        const hero = (sections || []).find(s => s.section_key === 'hero');
+        if (hero?.settings) setHeroData(hero.settings);
+      })
+      .catch(() => {});
+    return () => { mounted = false; };
+  }, []);
+
+  const h = heroData || {};
+  const heroImage = h.heroImage || 'https://images.unsplash.com/photo-1612152661182-8d6c5e568c94?w=900&q=85';
+  const stats = h.stats || [
+    { value: '500+', label: 'Happy Customers' },
+    { value: '1000+', label: 'Orders Delivered' },
+    { value: '4.8★', label: 'Average Rating' },
+  ];
+  const headline = h.headline || { line1: 'Crafted For', line2: 'Timeless', line2Suffix: 'Homes', line3: 'Where Wood Meets Artistry' };
+  const description = h.description || 'Discover statement decor shaped by skilled artisans, natural grains, and thoughtful details that bring warmth, trust, and elevated character into every room.';
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
 
   const opacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
@@ -116,10 +140,10 @@ export default function HeroBanner() {
                   className="font-display text-[#28221a] leading-[0.93] tracking-[-0.025em]"
                   style={{ fontSize: 'clamp(3.2rem, 7vw, 6.2rem)' }}
                 >
-                  <span className="block">Crafted For</span>
+                  <span className="block">{headline.line1}</span>
                   <span className="block relative mt-1">
-                    <span className="text-[#87663b]">Timeless</span>
-                    <span className="font-light italic"> Homes</span>
+                    <span className="text-[#87663b]">{headline.line2}</span>
+                    <span className="font-light italic"> {headline.line2Suffix}</span>
                     {/* Animated underline */}
                     <motion.span
                       initial={{ scaleX: 0, originX: 0 }}
@@ -136,7 +160,7 @@ export default function HeroBanner() {
                     className="block mt-2 font-light text-[#28221a]/70"
                     style={{ fontSize: '0.78em' }}
                   >
-                    Where Wood Meets Artistry
+                    {headline.line3}
                   </span>
                 </h1>
               </motion.div>
@@ -146,9 +170,7 @@ export default function HeroBanner() {
                 variants={itemVariants}
                 className="text-[#4f4437] text-[1rem] leading-[1.85] max-w-[42ch] mt-7"
               >
-                Discover statement decor shaped by skilled artisans, natural grains, and
-                thoughtful details that bring warmth, trust, and elevated character into
-                every room.
+                {description}
               </motion.p>
 
               {/* CTA buttons */}
@@ -186,11 +208,7 @@ export default function HeroBanner() {
                       'linear-gradient(90deg, rgba(135,102,59,0.18), rgba(184,154,103,0.12), transparent)',
                   }}
                 />
-                {[
-                  { value: '500+', label: 'Happy Customers' },
-                  { value: '1000+', label: 'Orders Delivered' },
-                  { value: '4.8★', label: 'Average Rating' },
-                ].map((stat, i) => (
+                {stats.map((stat, i) => (
                   <div key={i} className="text-center">
                     <div
                       className="font-display font-semibold text-[#28221a] leading-none"
@@ -238,7 +256,7 @@ export default function HeroBanner() {
                     }}
                   />
                   <img
-                    src="https://images.unsplash.com/photo-1612152661182-8d6c5e568c94?w=900&q=85"
+                    src={heroImage}
                     alt="Handcrafted wooden decor showcase"
                     className="w-full h-160 object-cover animate-gentle-zoom"
                     fetchpriority="high"

@@ -1,18 +1,27 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Mail } from 'lucide-react';
+import { Send, Mail, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { subscribeNewsletter } from '../../services/contentService';
 
 export default function Newsletter() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (email) {
+    if (!email) return;
+    setLoading(true);
+    try {
+      await subscribeNewsletter(email);
       setSubscribed(true);
       setEmail('');
       toast.success('Subscribed! Check your inbox for your 10% off code.');
+    } catch {
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,8 +57,9 @@ export default function Newsletter() {
                 required
                 className="flex-1 px-5 py-3.5 rounded-full text-charcoal bg-white/90 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-gold/40 text-sm placeholder:text-gray-400"
               />
-              <button type="submit" className="px-6 py-3.5 bg-gold text-white rounded-full font-medium hover:bg-primary-dark transition-all flex items-center justify-center gap-2 text-sm shadow-lg">
-                Subscribe <Send size={14} />
+              <button type="submit" disabled={loading} className="px-6 py-3.5 bg-gold text-white rounded-full font-medium hover:bg-primary-dark transition-all flex items-center justify-center gap-2 text-sm shadow-lg disabled:opacity-60">
+                {loading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                {loading ? 'Subscribing...' : 'Subscribe'}
               </button>
             </form>
           )}

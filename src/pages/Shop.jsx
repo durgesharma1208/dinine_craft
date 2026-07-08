@@ -9,6 +9,7 @@ import ProductSort from "../components/product/ProductSort";
 import QuickView from "../components/product/QuickView";
 import Breadcrumbs from "../components/ui/Breadcrumbs";
 import { SITE_URL } from "../utils/siteUrl";
+import CatalogSection from "../components/catalog/CatalogSection";
 
 export default function Shop() {
   const { allProducts } = useProducts();
@@ -93,6 +94,8 @@ export default function Shop() {
         isOpen={!!quickViewProduct}
         onClose={() => setQuickViewProduct(null)}
       />
+
+      <CatalogSection showAll />
     </>
   );
 }

@@ -328,3 +328,62 @@ USING (
   bucket_id = 'product-images'
   AND public.is_admin()
 );
+
+-- ============================================
+-- CATALOGS TABLE
+-- ============================================
+CREATE TABLE catalogs (
+  id BIGSERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT,
+  category_id BIGINT REFERENCES categories(id) ON DELETE SET NULL,
+  pdf_url TEXT NOT NULL,
+  cover_image_url TEXT,
+  file_size BIGINT DEFAULT 0,
+  page_count INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_catalogs_category ON catalogs(category_id);
+
+CREATE TRIGGER update_catalogs_updated_at
+  BEFORE UPDATE ON catalogs
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+ALTER TABLE catalogs ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public read catalogs" ON catalogs FOR SELECT USING (true);
+CREATE POLICY "Admin insert catalogs" ON catalogs FOR INSERT WITH CHECK (public.is_admin());
+CREATE POLICY "Admin update catalogs" ON catalogs FOR UPDATE USING (public.is_admin());
+CREATE POLICY "Admin delete catalogs" ON catalogs FOR DELETE USING (public.is_admin());
+
+-- ============================================
+-- STORAGE POLICIES (for catalogs bucket)
+-- ============================================
+
+CREATE POLICY "Public read catalog files"
+ON storage.objects FOR SELECT
+USING (bucket_id = 'catalogs');
+
+CREATE POLICY "Admin upload catalog files"
+ON storage.objects FOR INSERT
+WITH CHECK (
+  bucket_id = 'catalogs'
+  AND public.is_admin()
+);
+
+CREATE POLICY "Admin update catalog files"
+ON storage.objects FOR UPDATE
+USING (
+  bucket_id = 'catalogs'
+  AND public.is_admin()
+);
+
+CREATE POLICY "Admin delete catalog files"
+ON storage.objects FOR DELETE
+USING (
+  bucket_id = 'catalogs'
+  AND public.is_admin()
+);

@@ -23,6 +23,9 @@ const AdminSettings = lazy(() => import('../pages/admin/Settings'));
 const AdminHomepage = lazy(() => import('../pages/admin/Homepage'));
 const AdminTestimonials = lazy(() => import('../pages/admin/Testimonials'));
 const AdminFAQ = lazy(() => import('../pages/admin/FAQ'));
+const AdminCatalogs = lazy(() => import('../pages/admin/Catalogs'));
+const AdminCatalogForm = lazy(() => import('../pages/admin/CatalogForm'));
+const CatalogViewer = lazy(() => import('../components/catalog/CatalogViewer'));
 
 function PageLoader() {
   return (
@@ -73,8 +76,14 @@ export default function AppRoutes() {
           <Route path="homepage" element={<AdminHomepage />} />
           <Route path="testimonials" element={<AdminTestimonials />} />
           <Route path="faq" element={<AdminFAQ />} />
+          <Route path="catalogs" element={<AdminCatalogs />} />
+          <Route path="catalogs/new" element={<AdminCatalogForm />} />
+          <Route path="catalogs/edit/:id" element={<AdminCatalogForm />} />
           <Route path="settings" element={<AdminSettings />} />
         </Route>
+
+        {/* Public Catalog Viewer */}
+        <Route path="/catalog/:id" element={<CatalogViewer />} />
       </Routes>
     </Suspense>
   );

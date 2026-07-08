@@ -1,6 +1,10 @@
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, RotateCcw } from "lucide-react";
+import { X, RotateCcw, FileText, Eye, Download, Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useCategories } from "../../hooks/useCategories";
+import { fetchCatalogsByCategory } from "../../services/catalogService";
+import { formatBytes } from "../../utils/helpers";
 
 export default function ProductFilters({
   filters,
@@ -11,6 +15,22 @@ export default function ProductFilters({
   onClose,
 }) {
   const { categories } = useCategories();
+  const [catalog, setCatalog] = useState(null);
+  const [catalogLoading, setCatalogLoading] = useState(false);
+
+  const selectedCategory = categories.find(c => c.slug === filters.category);
+
+  useEffect(() => {
+    if (!selectedCategory) { setCatalog(null); return; }
+    let mounted = true;
+    setCatalogLoading(true);
+    setCatalog(null);
+    fetchCatalogsByCategory(selectedCategory.id)
+      .then(data => { if (mounted && data?.length > 0) setCatalog(data[0]); })
+      .catch(() => {})
+      .finally(() => { if (mounted) setCatalogLoading(false); });
+    return () => { mounted = false; };
+  }, [selectedCategory]);
   const priceRanges = [
     {
       label: "All Prices",
@@ -48,6 +68,34 @@ export default function ProductFilters({
 
   const filterContent = (
     <div className="space-y-6 premium-shell rounded-2xl p-5">
+      {/* Catalog section at top */}
+      {catalogLoading ? (
+        <div className="flex items-center justify-center py-4">
+          <Loader2 size={16} className="animate-spin text-primary/60" />
+        </div>
+      ) : catalog ? (
+        <div className="bg-[#87663b]/5 rounded-xl p-4 border border-[#c9a177]/12">
+          <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#87663b]/50 mb-2">Catalog</p>
+          <div className="flex items-center gap-2.5 mb-3">
+            <div className="w-8 h-8 rounded-lg bg-[#87663b]/10 flex items-center justify-center shrink-0">
+              <FileText size={15} className="text-[#87663b]" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-[#28221a] truncate">{catalog.title}</p>
+              <p className="text-[10px] text-gray-400">{catalog.page_count || '?'} pages · {formatBytes(catalog.file_size)}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Link to={`/catalog/${catalog.id}`} className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg bg-white text-[#87663b] text-[10px] font-semibold hover:bg-[#87663b]/8 transition-colors border border-[#c9a177]/15">
+              <Eye size={11} /> View
+            </Link>
+            <a href={catalog.pdf_url} download className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg bg-primary text-white text-[10px] font-semibold hover:bg-primary-light transition-colors">
+              <Download size={10} /> Download
+            </a>
+          </div>
+        </div>
+      ) : null}
+
       <div className="flex items-center justify-between">
         <h3 className="font-display text-base font-semibold text-charcoal">
           Filters

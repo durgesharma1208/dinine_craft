@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Package, Tags, Image, Home, Star, HelpCircle,
-  Settings, LogOut, X, Store
+  Settings, LogOut, X, Store, FileText
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -10,6 +10,7 @@ const navItems = [
   { to: '/admin/products', icon: Package, label: 'Products' },
   { to: '/admin/categories', icon: Tags, label: 'Categories' },
   { to: '/admin/media', icon: Image, label: 'Media' },
+  { to: '/admin/catalogs', icon: FileText, label: 'Catalogs' },
   { to: '/admin/homepage', icon: Home, label: 'Homepage' },
   { to: '/admin/testimonials', icon: Star, label: 'Testimonials' },
   { to: '/admin/faq', icon: HelpCircle, label: 'FAQ' },

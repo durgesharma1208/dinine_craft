@@ -42,34 +42,21 @@ export function useProducts() {
   const getProductsByCategory = useMemo(() => {
     const map = {};
     allProducts.forEach((p) => {
-      const key = p.category_slug || p.category.toLowerCase().replace(/\s+/g, '-');
-      if (!map[key]) map[key] = [];
-      map[key].push(p);
+      if (!p.category_slug) return;
+      if (!map[p.category_slug]) map[p.category_slug] = [];
+      map[p.category_slug].push(p);
     });
     return map;
   }, [allProducts]);
 
   const getRelatedProducts = useCallback(
     (product, limit = 4) => {
-      const categoryKey = product.category_slug || product.category.toLowerCase().replace(/\s+/g, '-');
-      const sameCategory = getProductsByCategory[categoryKey] || [];
+      if (!product.category_slug) return [];
+      const sameCategory = getProductsByCategory[product.category_slug] || [];
       return sameCategory.filter((p) => p.id !== product.id).slice(0, limit);
     },
     [getProductsByCategory],
   );
-
-  const categories = useMemo(() => {
-    const cats = [];
-    const seen = new Set();
-    allProducts.forEach((p) => {
-      const key = p.category_slug || p.category.toLowerCase().replace(/\s+/g, '-');
-      if (!seen.has(key)) {
-        seen.add(key);
-        cats.push({ name: p.category, slug: key });
-      }
-    });
-    return cats;
-  }, [allProducts]);
 
   return {
     allProducts,
@@ -81,7 +68,6 @@ export function useProducts() {
     getProductBySlug,
     getProductsByCategory,
     getRelatedProducts,
-    categories,
     loading,
     error,
   };

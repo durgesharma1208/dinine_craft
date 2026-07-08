@@ -13,8 +13,11 @@ import ContactCTA from '../components/home/ContactCTA';
 import ProductSection from '../components/home/ProductSection';
 import { generateOrganizationJsonLd, generateWebsiteJsonLd } from '../utils/seo';
 import { SITE_URL } from '../utils/siteUrl';
+import { useHomepageSections } from '../hooks/useHomepageSections';
+import CatalogSection from '../components/catalog/CatalogSection';
 
 export default function Home() {
+  const { isActive } = useHomepageSections();
   return (
     <>
       <Helmet>
@@ -32,21 +35,22 @@ export default function Home() {
         <script type="application/ld+json">{JSON.stringify(generateWebsiteJsonLd())}</script>
       </Helmet>
 
-      <HeroBanner />
-      <FeaturedCategories />
-      <ProductSection filterKey="featured" />
-      <WhyChooseUs />
-      <StatisticsCounter />
-      <ProductSection filterKey="bestSeller" />
-      <CraftingProcess />
-      <ProductSection filterKey="trending" />
-      <CustomerReviews />
-      <ProductSection filterKey="newArrival" />
-      <CustomizationSection />
-      <InstagramGallery />
-      <FAQ />
-      <Newsletter />
-      <ContactCTA />
+      {isActive('hero') && <HeroBanner />}
+      {isActive('featured_categories') && <FeaturedCategories />}
+      {isActive('featured_products') && <ProductSection filterKey="featured" />}
+      {isActive('why_choose_us') && <WhyChooseUs />}
+      {isActive('statistics') && <StatisticsCounter />}
+      {isActive('best_sellers') && <ProductSection filterKey="bestSeller" />}
+      {isActive('crafting_process') && <CraftingProcess />}
+      {isActive('trending_products') && <ProductSection filterKey="trending" />}
+      {isActive('customer_reviews') && <CustomerReviews />}
+      {isActive('new_arrivals') && <ProductSection filterKey="newArrival" />}
+      <CatalogSection showAll />
+      {isActive('customization') && <CustomizationSection />}
+      {isActive('instagram_gallery') && <InstagramGallery />}
+      {isActive('faq_section') && <FAQ />}
+      {isActive('newsletter') && <Newsletter />}
+      {isActive('contact_cta') && <ContactCTA />}
     </>
   );
 }
